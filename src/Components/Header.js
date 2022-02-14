@@ -13,10 +13,34 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 // other files
 import './Header.css'
 
-const pages = ['Products', 'Pricing', 'Blog']
+const pagesAuth = [
+  {
+    title: 'Product List',
+    link: '/',
+  },
+  {
+    title: 'Add Product',
+    link: '/add',
+  },
+  {
+    title: 'Search Product',
+    link: '/search',
+  },
+]
+const pagesNotAuth = [
+  {
+    title: 'Login',
+    link: '/login',
+  },
+  {
+    title: 'Register',
+    link: '/register',
+  },
+]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const Header = () => {
@@ -80,9 +104,16 @@ const Header = () => {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign='center'>{page}</Typography>
+                {pagesAuth.map((page) => (
+                  <MenuItem
+                    // href={page.link}
+                    // containerElement={<Link to={page.link} />}
+                    component={Link}
+                    to={page.link}
+                    key={page.title}
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography textAlign='center'>{page.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -96,13 +127,17 @@ const Header = () => {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
+              {pagesAuth.map((page) => (
                 <Button
-                  key={page}
+                  // href={page.link}
+                  // containerElement={<Link to={page.link} />}
+                  to={page.link}
+                  component={Link}
+                  key={page.title}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page}
+                  {page.title}
                 </Button>
               ))}
             </Box>
@@ -129,11 +164,11 @@ const Header = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
+                {/* {settings.map((setting) => ( */}
+                <MenuItem key='logout' onClick={handleCloseUserMenu}>
+                  <Typography textAlign='center'>Logout</Typography>
+                </MenuItem>
+                {/* ))} */}
               </Menu>
             </Box>
           </Toolbar>
