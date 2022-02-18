@@ -23,17 +23,17 @@ function App() {
           <Route path='/login' element={<Login />} />
 
           {/* Private Routes */}
-          <Route path='/add' element={<AddProduct />} />
-          {/* <Route path='/add' element={<Protected Cmp={AddProduct} />} /> */}
-          <Route path='/update/:id' element={<UpdateProduct />} />
-          {/* <Route
+          {/* <Route path='/add' element={<AddProduct />} /> */}
+          <Route path='/add' element={<Protected Cmp={AddProduct} />} />
+          {/* <Route path='/update/:id' element={<UpdateProduct />} /> */}
+          <Route
             path='/update/:id'
             element={<Protected Cmp={UpdateProduct} />}
-          /> */}
-          <Route path='/search' element={<SearchProduct />} />
-          {/* <Route path='/search' element={<Protected Cmp={SearchProduct} />} /> */}
-          <Route path='/' element={<ProductList />} />
-          {/* <Route path='/' element={<Protected Cmp={ProductList} />} /> */}
+          />
+          {/* <Route path='/search' element={<SearchProduct />} /> */}
+          <Route path='/search' element={<Protected Cmp={SearchProduct} />} />
+          {/* <Route path='/' element={<ProductList />} /> */}
+          <Route path='/' element={<Protected Cmp={ProductList} />} />
         </Routes>
       </Fragment>
     </BrowserRouter>

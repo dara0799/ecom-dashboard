@@ -12,8 +12,8 @@ import {
   Typography,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 // other files
 import './Header.css'
 
@@ -61,6 +61,24 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+
+  // State Akses Menu
+  const [allMenu, setAllMenu] = useState(pagesNotAuth)
+
+  // Pembatasan Hak Akses
+  let user = JSON.parse(localStorage.getItem('user-info'))
+  const history = useNavigate()
+  function logOut() {
+    localStorage.clear()
+    history('/login')
+  }
+
+  useEffect(() => {
+    if (user) {
+      setAllMenu(pagesAuth)
+    }
+  }, [user])
+
   return (
     <>
       <AppBar position='static'>
@@ -104,7 +122,7 @@ const Header = () => {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {pagesAuth.map((page) => (
+                {allMenu.map((page) => (
                   <MenuItem
                     // href={page.link}
                     // containerElement={<Link to={page.link} />}
@@ -127,7 +145,7 @@ const Header = () => {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pagesAuth.map((page) => (
+              {allMenu.map((page) => (
                 <Button
                   // href={page.link}
                   // containerElement={<Link to={page.link} />}
