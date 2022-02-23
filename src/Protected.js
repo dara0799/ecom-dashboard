@@ -5,8 +5,8 @@ function Protected(props) {
   const history = useNavigate()
   let Cmp = props.Cmp
   useEffect(() => {
-    if (!localStorage.getItem('user-info')) {
-      history('/register')
+    if (!localStorage.getItem('token')) {
+      history('/')
     }
   }, [])
   return (

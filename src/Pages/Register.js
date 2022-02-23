@@ -11,11 +11,11 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
+import { CircularProgress } from '@mui/material'
 // other files
 import Header from '../Components/Header'
 import { UserContext } from '../Contexts/UserContext'
 import { USER_CREATE_RESET } from '../Config/UserConstant'
-import { CircularProgress } from '@mui/material'
 
 function Copyright(props) {
   return (
@@ -91,19 +91,19 @@ const Register = () => {
         helperTextEmail: '',
         errorEmail: false,
       })
-      if (password.length === 0) {
-        _setPasswordHelper({
-          ..._passwordHelper,
-          helperTextPassword: 'Harap Masukkan Password Lengkap',
-          errorPassword: true,
-        })
-      } else {
-        _setPasswordHelper({
-          ..._passwordHelper,
-          helperTextPassword: '',
-          errorPassword: false,
-        })
-      }
+    }
+    if (password.length === 0) {
+      _setPasswordHelper({
+        ..._passwordHelper,
+        helperTextPassword: 'Harap Masukkan Password Lengkap',
+        errorPassword: true,
+      })
+    } else {
+      _setPasswordHelper({
+        ..._passwordHelper,
+        helperTextPassword: '',
+        errorPassword: false,
+      })
     }
   }
 
@@ -112,16 +112,16 @@ const Register = () => {
     e.preventDefault()
     const token = JSON.parse(localStorage.getItem('token'))
     valid()
-    const dataUser = {
-      name,
-      email,
-      password,
-    }
-    if (dataUser) {
+    if (name && email && password) {
+      let dataUser = {
+        name,
+        email,
+        password,
+      }
       await createUser(dataUser, token)
       console.log(dataUser)
-      localStorage.setItem('user-info', JSON.stringify(dataUser))
-      history('/')
+      // localStorage.setItem('user-info', JSON.stringify(dataUser))
+      history('/login')
     } else {
       console.log('Harap Masukkan Data!')
     }
@@ -204,8 +204,8 @@ const Register = () => {
                     autoComplete='email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    helperText={_nameHelper.helperTextEmail}
-                    error={_nameHelper.errorEmail}
+                    helperText={_emailHelper.helperTextEmail}
+                    error={_emailHelper.errorEmail}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -219,8 +219,8 @@ const Register = () => {
                     autoComplete='new-password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    helperText={_nameHelper.helperTextPassword}
-                    error={_nameHelper.errorPassword}
+                    helperText={_passwordHelper.helperTextPassword}
+                    error={_passwordHelper.errorPassword}
                   />
                 </Grid>
               </Grid>

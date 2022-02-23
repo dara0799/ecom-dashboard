@@ -4,6 +4,10 @@ import {
   USER_CREATE_REQUEST,
   USER_CREATE_RESET,
   USER_CREATE_SUCCESS,
+  USER_LOGIN_FAIL,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+  USER_LOGOUT,
 } from '../Config/UserConstant'
 import Header from '../Components/Header'
 import { api } from '../Services/api'
@@ -20,6 +24,10 @@ const UserContextProvider = (props) => {
   const [isAuthenticated, setisAuthenticated] = useState(false)
   const [userCreate, userCreateDispatch] = useReducer(
     createUserReducer,
+    initialState
+  )
+  const [userLogin, userLoginDispatch] = useReducer(
+    loginUserReducer,
     initialState
   )
 
@@ -47,6 +55,43 @@ const UserContextProvider = (props) => {
       })
     }
   }
+
+  const login = async (dataPost) => {
+    try {
+      userLoginDispatch({
+        type: USER_LOGIN_REQUEST,
+      })
+
+      const { data } = await api.login(dataPost)
+
+      setTimeout(() => {
+        localStorage.setItem('token', JSON.stringify(data.token))
+        localStorage.setItem('firstLogin', true)
+        localStorage.setItem('id', JSON.stringify(data._id))
+        userLoginDispatch({
+          type: USER_LOGIN_SUCCESS,
+          payload: data,
+        })
+        setisAuthenticated(true)
+      }, 3000)
+    } catch (err) {
+      console.log('err', err.response.data.detail)
+      userLoginDispatch({
+        type: USER_LOGIN_FAIL,
+        payload: err.response.data.detail,
+      })
+    }
+  }
+
+  const logout = () => {
+    userLoginDispatch({
+      type: USER_LOGOUT,
+    })
+    setisAuthenticated(false)
+    localStorage.clear()
+    api.logout()
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -55,6 +100,10 @@ const UserContextProvider = (props) => {
         userCreate,
         userCreateDispatch,
         createUser,
+        userLogin,
+        userLoginDispatch,
+        login,
+        logout,
       }}
     >
       {props.children}
@@ -93,6 +142,21 @@ const createUserReducer = (state, action) => {
         userInfo: [],
         loading: false,
       }
+    default:
+      return state
+  }
+}
+
+const loginUserReducer = (state, action) => {
+  switch (action.type) {
+    case USER_LOGIN_REQUEST:
+      return { loading: true }
+    case USER_LOGIN_SUCCESS:
+      return { loading: false, userInfo: action.payload }
+    case USER_LOGIN_FAIL:
+      return { loading: false, error: action.payload }
+    case USER_LOGOUT:
+      return {}
     default:
       return state
   }

@@ -14,7 +14,7 @@ const allApi = axios.create({
 
 // api user
 const register = (data, config) => allApi.post('/register', data, config)
-const login = (data) => allApi.post(`/login?${data}`)
+const login = (data) => allApi.post(`/login`, data)
 const logout = () => allApi.post(`/logout`)
 
 export const api = {

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -12,8 +12,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { useNavigate } from 'react-router-dom'
+import { Alert, CircularProgress } from '@mui/material'
 // other files
 import Header from '../Components/Header'
+import { UserContext } from '../Contexts/UserContext'
 
 function Copyright(props) {
   return (
@@ -36,15 +39,74 @@ function Copyright(props) {
 const theme = createTheme()
 
 const Login = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+  // state
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const history = useNavigate()
+  const [_emailHelper, _setEmailHelper] = useState({
+    helperTextEmail: '',
+    errorEmail: false,
+  })
+  const [_passwordHelper, _setPasswordHelper] = useState({
+    helperTextPassword: '',
+    errorPassword: false,
+  })
+
+  // context
+  const { isAuthenticated, userLogin, login } = useContext(UserContext)
+  const { loading, error } = userLogin
+
+  // validation
+  const valid = () => {
+    if (email.length === 0) {
+      _setEmailHelper({
+        ..._emailHelper,
+        helperTextEmail: 'Harap Masukkan Email Lengkap',
+        errorEmail: true,
+      })
+    } else {
+      _setEmailHelper({
+        ..._emailHelper,
+        helperTextEmail: '',
+        errorEmail: false,
+      })
+    }
+    if (password.length === 0) {
+      _setPasswordHelper({
+        ..._passwordHelper,
+        helperTextPassword: 'Harap Masukkan Password Lengkap',
+        errorPassword: true,
+      })
+    } else {
+      _setPasswordHelper({
+        ..._passwordHelper,
+        helperTextPassword: '',
+        errorPassword: false,
+      })
+    }
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    valid()
+    if (email && password) {
+      let dataUser = {
+        email,
+        password,
+      }
+      await login(dataUser)
+      console.log(dataUser)
+    } else {
+      console.log('Harap Masukkan Data!')
+    }
+  }
+
+  useEffect(() => {
+    if (isAuthenticated || localStorage.getItem('token')) {
+      history('/product')
+    }
+  }, [history, isAuthenticated])
 
   return (
     <>
@@ -60,6 +122,15 @@ const Login = () => {
               alignItems: 'center',
             }}
           >
+            {error && (
+              <Alert
+                variant='filled'
+                severity='error'
+                style={{ marginBottom: 8, marginTop: 8 }}
+              >
+                <b>Peringatan!</b> Alamat Email atau Kata Sandi Anda Salah!
+              </Alert>
+            )}
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
@@ -81,6 +152,10 @@ const Login = () => {
                     label='Email Address'
                     name='email'
                     autoComplete='email'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    helperText={_emailHelper.helperTextEmail}
+                    error={_emailHelper.errorEmail}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -92,6 +167,10 @@ const Login = () => {
                     type='password'
                     id='password'
                     autoComplete='new-password'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    helperText={_passwordHelper.helperTextPassword}
+                    error={_passwordHelper.errorPassword}
                   />
                 </Grid>
               </Grid>
@@ -101,7 +180,11 @@ const Login = () => {
                 variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
-                Login
+                {loading ? (
+                  <CircularProgress style={{ color: '#fff' }} />
+                ) : (
+                  'Login'
+                )}
               </Button>
             </Box>
           </Box>

@@ -19,7 +19,7 @@ function App() {
         {/* <Header /> */}
         <Routes>
           {/* Public Routes */}
-          <Route path='/register' element={<Register />} />
+          <Route path='/' element={<Register />} />
           <Route path='/login' element={<Login />} />
 
           {/* Private Routes */}
@@ -32,8 +32,8 @@ function App() {
           />
           {/* <Route path='/search' element={<SearchProduct />} /> */}
           <Route path='/search' element={<Protected Cmp={SearchProduct} />} />
-          {/* <Route path='/' element={<ProductList />} /> */}
-          <Route path='/' element={<Protected Cmp={ProductList} />} />
+          {/* <Route path='/product' element={<ProductList />} /> */}
+          <Route path='/product' element={<Protected Cmp={ProductList} />} />
         </Routes>
       </Fragment>
     </BrowserRouter>

@@ -20,7 +20,7 @@ import './Header.css'
 const pagesAuth = [
   {
     title: 'Product List',
-    link: '/',
+    link: '/product',
   },
   {
     title: 'Add Product',
@@ -38,7 +38,7 @@ const pagesNotAuth = [
   },
   {
     title: 'Register',
-    link: '/register',
+    link: '/',
   },
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -66,7 +66,7 @@ const Header = () => {
   const [allMenu, setAllMenu] = useState(pagesNotAuth)
 
   // Pembatasan Hak Akses
-  let user = JSON.parse(localStorage.getItem('user-info'))
+  let user = JSON.parse(localStorage.getItem('token'))
   const history = useNavigate()
   function logOut() {
     localStorage.clear()
