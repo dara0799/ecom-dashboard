@@ -9,7 +9,6 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
 } from '../Config/UserConstant'
-import Header from '../Components/Header'
 import { api } from '../Services/api'
 
 // Context
@@ -89,7 +88,7 @@ const UserContextProvider = (props) => {
     })
     setisAuthenticated(false)
     localStorage.clear()
-    api.logout()
+    // api.logout()
   }
 
   return (

@@ -12,10 +12,11 @@ import {
   Typography,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 // other files
 import './Header.css'
+import { UserContext } from '../Contexts/UserContext'
 
 const pagesAuth = [
   {
@@ -67,9 +68,15 @@ const Header = () => {
 
   // Pembatasan Hak Akses
   let user = JSON.parse(localStorage.getItem('token'))
+
+  // context
+  const { logout } = useContext(UserContext)
+
+  // logout
   const history = useNavigate()
-  function logOut() {
-    localStorage.clear()
+  const handlerLogout = () => {
+    logout()
+    // localStorage.clear()
     history('/login')
   }
 
@@ -184,7 +191,13 @@ const Header = () => {
               >
                 {/* {settings.map((setting) => ( */}
                 <MenuItem key='logout' onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>Logout</Typography>
+                  <Typography
+                    textAlign='center'
+                    component={Button}
+                    onClick={handlerLogout}
+                  >
+                    Logout
+                  </Typography>
                 </MenuItem>
                 {/* ))} */}
               </Menu>
